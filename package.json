@@ -1,9 +1,10 @@
 {
-  "type":"module",
+  "type": "module",
   "dependencies": {
     "@mempool/mempool.js": "^2.3.0",
     "bip32": "^4.0.0",
     "bitcoinjs-lib": "^6.1.6",
+    "btc-staking-ts": "^0.2.2",
     "ecpair": "^2.1.0"
   }
 }
