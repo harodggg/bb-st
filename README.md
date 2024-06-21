@@ -9,5 +9,11 @@
 # 3. bitcoin 工具包
 ![Alt text](image-3.png)
 
+# 4. bitcoin 指令集
+![Alt text](image-4.png)
+
+# 5. stakebb.js tx
+![Alt text](image-5.png)
+
 # js export, export default, module.export, export 区分
 ![Alt text](image-1.png)

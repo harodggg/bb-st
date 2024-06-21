@@ -23,9 +23,6 @@ const main = async () => {
 
     let mn = ""
 
-
- 
-
     let prv = ""
 
 
@@ -40,7 +37,7 @@ const main = async () => {
 
     const childNode = rootKey.derivePath(path)
     // console.log(childNode.toBase58())
-    console.log(childNode.toWIF())
+    console.log("prv:  " + childNode.toWIF())
 
     const childNodeXOnlyPubkey = childNode.publicKey.subarray(1,33)
 
@@ -56,13 +53,15 @@ const main = async () => {
         bitcoin.crypto.taggedHash('TapTweak', childNodeXOnlyPubkey),
     );
 
+    console.log("publicKey: " + tweakedChildNode.publicKey.toString('hex') + " length: " + tweakedChildNode.publicKey.length)
+    console.log("publicKeynocoord: " + tweakedChildNode.publicKey.toString('hex') +  " length: " +  tweakedChildNode.publicKey.subarray(1,33).length)
+
     const { address, output } = bitcoin.payments.p2tr({
         pubkey: tweakedChildNode.publicKey.subarray(1,33),
         network: SIGNET
     });
 
-    console.log({ address })
-    console.log(output)
+    console.log("scriptpubkey:  " + output.toString('hex'))
 
     
     // console.log(keyPair.publicKey.toString('hex'))
@@ -80,16 +79,16 @@ const main = async () => {
         network: 'signet'
     });
 
-    console.log(await addresses.getAddressTxsUtxo({ address }))
+  
     const {txid: hash, vout: index, value: amount } = (await addresses.getAddressTxsUtxo({ address }))[0]
-    console.log((await addresses.getAddressTxsUtxo({ address }))[0])
+    // console.log((await addresses.getAddressTxsUtxo({ address }))[0])
 
 
     let sendAmount = 1e5
-    let feeAmount = 2e4
-    console.log(hash)
-    console.log(index)
-    console.log(amount)
+    let feeAmount = 3e4
+    console.log("txid: " + hash)
+    console.log("index: " + index)
+    console.log("amount: " + amount)
     const psbt = new bitcoin.Psbt({ network: SIGNET })
         .addInput({
             hash,
@@ -99,22 +98,26 @@ const main = async () => {
         })
         .addOutput({
             value: sendAmount,
-            address: "",
+            address: "tb1pdj6drgzfcz3a459q29k8d6ceurx736pvy70syqapqfrdn2pwkats247w48",
         })
         .addOutput({
             value: amount - sendAmount - feeAmount,
-            address: ""
+            address: "tb1p68dylreagp5mkatu5pn0vlppxcegzx2kjg250zz5yrg62w2eyqaq6wmegs"
         })
         .signInput(0, tweakedChildNode).finalizeAllInputs()
     
  
 
-    const txHex = psbt.extractTransaction().toHex();
+    const vsize = psbt.extractTransaction().virtualSize()
+
+    const txHex = psbt.extractTransaction().toHex()
+
+    console.log("txhex: " + txHex)
   
 
-    const txid = await sendTx(txHex)
+    // const txid = await sendTx(txHex)
 
-    console.log(txid)
+    // console.log(txid)
 
     
     // let txHex = ""
